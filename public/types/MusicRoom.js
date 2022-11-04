@@ -88,6 +88,28 @@ class MusicRoom {
     AddNeonSticks()
     {
         const loader = new GLTFLoader().setPath('/resources/neonstick/');
+        // loader.load('scene.gltf', (gltf) => {
+        // this.neonStick = new THREE.Object3D();
+        // gltf.scene.scale.set(0.8,0.2,0.8);
+        // gltf.scene.rotation.set(0,0,0);
+        // this.neonStick.add(gltf.scene);
+        // this.neonStick.position.set(1,1,1);
+        // this.neonStick.rotation.set(0.15,0,0);
+        // this.neonGroup1.add(this.neonStick);
+        // })
+
+        // loader.load('scene.gltf', (gltf) => {
+        //     this.neonStick = new THREE.Object3D();
+        //     gltf.scene.scale.set(0.8,0.2,0.8);
+        //     gltf.scene.rotation.set(0,0,0);
+        //     this.neonStick.add(gltf.scene);
+        //     this.neonStick.position.set(3,1,3);
+        //     this.neonStick.rotation.set(0.15,0,0);
+        //     this.neonGroup1.add(this.neonStick);
+
+        // })
+    
+        
         for(let i=0; i<3; i++)
         {
             for(let j=0; j<10; j++)
@@ -104,7 +126,7 @@ class MusicRoom {
                         this.neonStick.position.set(j-4+0.1, 0, i+3);
                         this.neonStick.rotation.set(0.15,0,0);
                     }
-    
+
                     else
                     {
                         gltf.scene.scale.set(0.8,0.2,0.8);
@@ -112,19 +134,19 @@ class MusicRoom {
                         this.neonStick.add(gltf.scene);
                         this.neonStick.position.set(j-5, 0, i+3);
                         this.neonStick.rotation.set(0.15,0,0);
-    
+
                     }
                     
                     this.neonGroup1.add(this.neonStick);
                     })
             }
-    
+
             for(let k=0; k<10; k++)
             {            
                 this.neonStick = new THREE.Object3D();
-    
+
                 loader.load('scene.gltf', (gltf) => {
-                    
+                
                     if(k%2==0)
                     {
                         gltf.scene.scale.set(0.8,0.2,0.8);
