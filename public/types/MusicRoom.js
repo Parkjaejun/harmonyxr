@@ -5,7 +5,8 @@ import { GLTFLoader } from '../libs/loaders/GLTFLoader.js';
 class MusicRoom {
     constructor(scene) {
         this.scene = scene;
-
+        
+        // create spotLights
         this.spotLightR= new THREE.SpotLight(0xff0000, 5, 30, Math.PI * 0.1, 0.1, 2);
         this.spotLightG = new THREE.SpotLight(0x00ff00, 5, 30, Math.PI * 0.1, 0.1,2);
         this.spotLightB = new THREE.SpotLight(0x0000ff, 5, 30, Math.PI * 0.1, 0.1, 2);
@@ -15,7 +16,7 @@ class MusicRoom {
         this.spotLightW3 = new THREE.SpotLight(0xffffff, 7, 30, Math.PI * 0.05, 0.1, 2);
         this.spotLightW4 = new THREE.SpotLight(0xffffff, 7, 30, Math.PI * 0.05, 0.1, 2);
         
-        
+        // put them in array to control at once
         this.LightArray = new Array();
         this.LightArray.push(this.spotLightR);
         this.LightArray.push(this.spotLightG);
@@ -27,6 +28,7 @@ class MusicRoom {
         this.LightArray.push(this.spotLightW4);
         
 
+        // create pattern array for lookAt target
         this.pattrolPatternX = 0;
         this.circlePattern1 = [0,0];
         this.circlePattern2 = [0,0];
@@ -36,22 +38,26 @@ class MusicRoom {
         this.time = 0;
         this.neonStickAngle = 0;
 
+        //create Three.Group for neonSticks
         this.neonGroup1 = new THREE.Group();
         this.neonGroup2 = new THREE.Group();
 
     }
 
+    //Method for create Stage Model
     addMusicRoom() 
-    {
+    {        
+        this.stageWall = new THREE.Object3D();
+
         const loader = new GLTFLoader().setPath('/resources/MusicRoom/');
         loader.load('scene.gltf', (gltf) => {
             gltf.scene.scale.set(0.8,0.8,0.8);
             gltf.scene.position.set(0, -0.5, 0); 
             this.scene.add( gltf.scene );
         })
-    
     }
     
+    //Method for create Lights in map, setting light options.
     addLight()
     {
         this.spotLightR.position.set(  3, 3, 2.5 );
@@ -74,17 +80,9 @@ class MusicRoom {
             this.LightArray[i].shadow.camera.fov = 30;
             this.scene.add( this.LightArray[i] );
         }
-    
-    
-        const loader = new GLTFLoader().setPath('/resources/hand/');
-        loader.load('scene.gltf', (gltf) => {
-        gltf.scene.scale.set(0.01, 0.01, 0.01);
-        gltf.scene.position.set(0,3,5); 
-        this.scene.add( gltf.scene );
-        })
-    
     }
     
+    //create neonSticks and put them in group
     AddNeonSticks()
     {
         const loader = new GLTFLoader().setPath('/resources/neonstick/');   
@@ -93,7 +91,6 @@ class MusicRoom {
         {
             for(let j=0; j<10; j++)
             {
-                
                 loader.load('scene.gltf', (gltf) => {
                     this.neonStick = new THREE.Object3D();
     
@@ -156,6 +153,7 @@ class MusicRoom {
         this.scene.add(this.neonGroup2);
     }
     
+    // create Pattern for spotlight Target. using LookAt for spotlight rotation
     LightTargetPattrol()
     {
         if(this.pattrolPatternX < -5)
@@ -170,12 +168,10 @@ class MusicRoom {
     
         this.pattrolPatternX = this.pattrolPatternX + 0.1*this.pattrolFlag;
     
-        // for(let i=0; i< 3; i++)
-        // {
-            this.LightArray[1].target.position.x = this.pattrolPatternX;
-            this.scene.add(this.LightArray[1].target );
-        // }
+        this.LightArray[1].target.position.x = this.pattrolPatternX;
+        this.scene.add(this.LightArray[1].target );
     
+        // set positoin for each frame with circle pattern
         this.time = this.time + 0.1;
         this.circlePattern1[0] = -1 + 1 * Math.cos(this.time);
         this.circlePattern1[1] =  0 + 1 * Math.sin(this.time);
@@ -193,7 +189,7 @@ class MusicRoom {
         this.spotLightW2.target.position.z = this.circlePattern2[1];
         this.scene.add(this.spotLightW2.target );
     
-    
+        // set positoin for each frame with inverse circle pattern
         this.circlePattern3[0] = 1 + 1 * Math.cos(this.time*-1);
         this.circlePattern3[1] = 0 + 1 * Math.sin(this.time*-1);
         this.spotLightW3.target.position.x = this.circlePattern3[0];
@@ -204,18 +200,15 @@ class MusicRoom {
     
         this.scene.add(this.spotLightW3.target );
         this.scene.add(this.spotLightB.target );
-    // 
-    // 
+
         this.circlePattern4[0] = 2 + 1 * Math.cos(this.time*-1)*-1;
         this.circlePattern4[1] = 0 + 1 * Math.sin(this.time*-1)*-1;
         this.spotLightW4.target.position.x = this.circlePattern4[0];
         this.spotLightW4.target.position.z = this.circlePattern4[1];
         this.scene.add(this.spotLightW4.target );
-    
-        
-        // console.log (circlePattern1[0] + " " + circlePattern1[1]);
     }
     
+    // Add animation for neonStick groups
     NeonStickAnimation()
     {
         if(this.neonStickAngle > 0.7)
